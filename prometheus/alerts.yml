@@ -1,0 +1,57 @@
+groups:
+  - name: node-exporter.rules
+    rules:
+      - alert: HighCPUUtilization
+        expr: 100 * (1 - avg by(instance) (rate(node_cpu_seconds_total{job="node-exporter",mode="idle"}[5m]))) > 80
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU utilization on {{ $labels.instance }}"
+          description: "CPU utilization is above 80% for more than 2 minutes."
+
+      - alert: HighCPULoad1
+        expr: (node_load1{job="node-exporter"} / on(instance) count by(instance) (node_cpu_seconds_total{job="node-exporter",mode="idle"})) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU load (1m) on {{ $labels.instance }}"
+          description: "Normalized load1 is above 1 for more than 5 minutes."
+
+      - alert: HighCPULoad5
+        expr: (node_load5{job="node-exporter"} / on(instance) count by(instance) (node_cpu_seconds_total{job="node-exporter",mode="idle"})) > 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU load (5m) on {{ $labels.instance }}"
+          description: "Normalized load5 is above 1 for more than 10 minutes."
+
+      - alert: HighCPULoad15
+        expr: (node_load15{job="node-exporter"} / on(instance) count by(instance) (node_cpu_seconds_total{job="node-exporter",mode="idle"})) > 1
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU load (15m) on {{ $labels.instance }}"
+          description: "Normalized load15 is above 1 for more than 15 minutes."
+
+      - alert: LowMemoryAvailable
+        expr: (node_memory_MemAvailable_bytes{job="node-exporter"} / node_memory_MemTotal_bytes{job="node-exporter"}) < 0.2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low available memory on {{ $labels.instance }}"
+          description: "MemAvailable is below 20% of total memory for more than 5 minutes."
+
+      - alert: LowDiskSpaceRoot
+        expr: (node_filesystem_avail_bytes{mountpoint="/",job="node-exporter"} / node_filesystem_size_bytes{mountpoint="/",job="node-exporter"}) < 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low free disk space on {{ $labels.instance }}"
+          description: "Root filesystem free space is below 10% for more than 5 minutes."
+

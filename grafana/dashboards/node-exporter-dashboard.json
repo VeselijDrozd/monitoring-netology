@@ -1,0 +1,198 @@
+{
+  "uid": "node-exporter-dashboard",
+  "title": "Node Exporter (CPU/RAM/FS)",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "5s",
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "templating": {
+    "list": []
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "CPU utilization (100 - idle), %",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 1
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "100 * (1 - avg by(instance) (rate(node_cpu_seconds_total{job=\"node-exporter\",mode=\"idle\"}[5m])))",
+          "legendFormat": "{{instance}}",
+          "format": "time_series"
+        }
+      ],
+      "pluginVersion": "11.2.0"
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "CPU load (1 / 5 / 15)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_load1{job=\"node-exporter\"}",
+          "legendFormat": "load1",
+          "format": "time_series"
+        },
+        {
+          "refId": "B",
+          "expr": "node_load5{job=\"node-exporter\"}",
+          "legendFormat": "load5",
+          "format": "time_series"
+        },
+        {
+          "refId": "C",
+          "expr": "node_load15{job=\"node-exporter\"}",
+          "legendFormat": "load15",
+          "format": "time_series"
+        }
+      ],
+      "pluginVersion": "11.2.0"
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Free RAM (MemAvailable), bytes",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_memory_MemAvailable_bytes{job=\"node-exporter\"}",
+          "legendFormat": "{{instance}}",
+          "format": "time_series"
+        }
+      ],
+      "pluginVersion": "11.2.0"
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Free disk space for /, bytes",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_filesystem_avail_bytes{mountpoint=\"/\",job=\"node-exporter\"}",
+          "legendFormat": "avail",
+          "format": "time_series"
+        }
+      ],
+      "pluginVersion": "11.2.0"
+    }
+  ],
+  "links": [],
+  "panelsOrder": [1, 2, 3, 4],
+  "gnetId": null,
+  "graphTooltip": 1
+}
+
